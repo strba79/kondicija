@@ -1,6 +1,9 @@
-package com.strba.kondicija
+import com.strba.kondicija.Contract
+import com.strba.kondicija.InputFragment
+import com.strba.kondicija.MainActivity
+import com.strba.kondicija.TimerService
 
-class MainPresenter(private val view: MainActivity, private val model: Contract.Model) : Contract.Presenter, TimerService.TimerListener {
+class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerService.TimerListener {
     private var timerService: TimerService? = null
 
     override fun startTraining(sets: Int, workMinutes: Int, workSeconds: Int, restSeconds: Int) {
@@ -8,7 +11,10 @@ class MainPresenter(private val view: MainActivity, private val model: Contract.
     }
 
     override fun restartTraining() {
-        view.showFragment(InputFragment())
+        timerService?.stopTraining()
+        val inputFragment = InputFragment()
+        inputFragment.setPresenter(this)
+        view.showFragment(inputFragment)
     }
 
     fun bindService(service: TimerService) {

@@ -1,5 +1,6 @@
 package com.strba.kondicija
 
+import MainPresenter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,6 +38,13 @@ class InputFragment : Fragment() {
             val workSeconds = workSecondsInput.text.toString().toIntOrNull() ?: 0
             val restSeconds = restInput.text.toString().toIntOrNull() ?: 0
             presenter.startTraining(sets, workMinutes, workSeconds, restSeconds)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!::presenter.isInitialized) {
+            presenter = MainPresenter(requireActivity() as MainActivity)
         }
     }
 

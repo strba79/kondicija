@@ -1,5 +1,6 @@
 package com.strba.kondicija
 
+import MainPresenter
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(), Contract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter = MainPresenter(this, MainModel())
+        presenter = MainPresenter(this)
 
         inputFragment = InputFragment()
         inputFragment.setPresenter(presenter)
