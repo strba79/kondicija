@@ -12,52 +12,164 @@
         android:layout_margin="10sp"
         android:background="@android:color/white">
 
-        <EditText
-            android:id="@+id/sets"
+        <LinearLayout
+            android:id="@+id/sets_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Number of Sets"
-            android:inputType="number"
+            android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/work_minutes"
+            <Button
+                android:id="@+id/sets_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="-"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/sets"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Number of Sets"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/sets_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="+"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/work_minutes_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Work Minutes"
-            android:inputType="number"
-            app:layout_constraintTop_toBottomOf="@id/sets"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/sets_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/work_seconds"
+            <Button
+                android:id="@+id/work_minutes_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="-"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/work_minutes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Work Minutes"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/work_minutes_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="+"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/work_seconds_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Work Seconds"
-            android:inputType="number"
-            app:layout_constraintTop_toBottomOf="@id/work_minutes"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/work_minutes_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <EditText
-            android:id="@+id/rest"
+            <Button
+                android:id="@+id/work_seconds_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="-"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/work_seconds"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Work Seconds"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/work_seconds_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="+"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rest_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Rest Time (seconds)"
-            android:inputType="number"
-            app:layout_constraintTop_toBottomOf="@id/work_seconds"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/work_seconds_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/rest_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="-"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/rest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Rest Time (seconds)"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/rest_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="+"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Start"
-            app:layout_constraintTop_toBottomOf="@id/rest"
+            app:layout_constraintTop_toBottomOf="@id/rest_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
