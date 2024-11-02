@@ -1,6 +1,6 @@
-package com.strba.kondicija
+package com.strba.kondicija.view.fragment
 
-import MainPresenter
+import com.strba.kondicija.presenter.MainPresenter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import com.strba.kondicija.Contract
+import com.strba.kondicija.view.MainActivity
+import com.strba.kondicija.R
 
 class InputFragment : Fragment() {
     private lateinit var presenter: Contract.Presenter

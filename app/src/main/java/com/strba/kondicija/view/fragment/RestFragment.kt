@@ -1,4 +1,4 @@
-package com.strba.kondicija
+package com.strba.kondicija.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.strba.kondicija.R
 
 class RestFragment : Fragment() {
     private lateinit var timerTextView: TextView

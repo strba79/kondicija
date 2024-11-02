@@ -1,6 +1,6 @@
-package com.strba.kondicija
+package com.strba.kondicija.view
 
-import MainPresenter
+import com.strba.kondicija.presenter.MainPresenter
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -8,11 +8,18 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.strba.kondicija.Contract
+import com.strba.kondicija.R
+import com.strba.kondicija.service.TimerService
+import com.strba.kondicija.view.fragment.EndFragment
+import com.strba.kondicija.view.fragment.InputFragment
+import com.strba.kondicija.view.fragment.PrepareFragment
+import com.strba.kondicija.view.fragment.RestFragment
+import com.strba.kondicija.view.fragment.WorkFragment
 
 class MainActivity : AppCompatActivity(), Contract.View {
     private lateinit var presenter: Contract.Presenter

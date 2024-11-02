@@ -1,10 +1,12 @@
-package com.strba.kondicija
+package com.strba.kondicija.service
 
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
+import com.strba.kondicija.StepType
+import com.strba.kondicija.TrainingStep
 
 class TimerService : Service() {
     private val binder = TimerBinder()
