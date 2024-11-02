@@ -9,24 +9,18 @@ import androidx.fragment.app.Fragment
 
 class PrepareFragment : Fragment() {
     private lateinit var prepareTextView: TextView
-    private lateinit var secondsTextView: TextView
+    private lateinit var timerTextView: TextView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_prepare, container, false)
         prepareTextView = view.findViewById(R.id.prepare_text_view)
-        secondsTextView = view.findViewById(R.id.seconds_text_view)
+        timerTextView = view.findViewById(R.id.timer_text_view)
         return view
     }
 
-    fun updatePrepareText(message: String) {
-        prepareTextView.text = message
-    }
-
-    fun updateSeconds(seconds: Long) {
-        if (this::secondsTextView.isInitialized) {
-            secondsTextView.text = "Prepare time remaining: $seconds seconds"
-        }
+    fun updateTimerText(time: String) {
+        timerTextView.text = time
     }
 }

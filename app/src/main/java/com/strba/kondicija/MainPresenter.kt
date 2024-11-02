@@ -33,12 +33,13 @@ class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerS
         view.showPrepareFragment()
     }
 
-    override fun onTimerUpdate(time: String, setsRemaining: Int, isWork: Boolean) {
-        if (!isWork) {
-            val secondsRemaining = Regex("\\d+").find(time)?.value?.toLong() ?: 0L
-            prepareFragment?.updateSeconds(secondsRemaining)
-        }
-        view.updateTimer(time, setsRemaining, isWork)
+    override fun onTimerUpdate(
+        time: String,
+        setsRemaining: Int,
+        isWork: Boolean,
+        isPrepare: Boolean
+    ) {
+        view.updateTimer(time, setsRemaining, isWork, isPrepare)
     }
 
     override fun onWorkStart() {

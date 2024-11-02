@@ -16,7 +16,7 @@ class WorkFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_work, container, false)
-        timerTextView = view.findViewById(R.id.timer_text_view)
+        timerTextView = view.findViewById(R.id.timer_text_view_)
         setsRemainingTextView = view.findViewById(R.id.sets_remaining_text_view)
         return view
     }

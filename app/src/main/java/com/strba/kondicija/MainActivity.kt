@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity(), Contract.View {
     private lateinit var presenter: Contract.Presenter
     private lateinit var inputFragment: InputFragment
     private lateinit var workFragment: WorkFragment
+    private lateinit var prepareFragment: PrepareFragment
     private lateinit var restFragment: RestFragment
     private lateinit var endFragment: EndFragment
     private var timerService: TimerService? = null
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity(), Contract.View {
         setContentView(R.layout.activity_main)
 
         presenter = MainPresenter(this)
-
+        prepareFragment = PrepareFragment()
         inputFragment = InputFragment()
         inputFragment.setPresenter(presenter)
         workFragment = WorkFragment()
@@ -70,11 +71,9 @@ class MainActivity : AppCompatActivity(), Contract.View {
     }
 
     fun showPrepareFragment() {
-        val fragment = PrepareFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+        showFragment(prepareFragment)
     }
+
     fun showWorkFragment() {
         showFragment(workFragment)
     }
@@ -95,11 +94,11 @@ class MainActivity : AppCompatActivity(), Contract.View {
         fragmentTransaction.commit()
     }
 
-    fun updateTimer(time: String, setsRemaining: Int, isWork: Boolean) {
-        if (isWork) {
-            workFragment.updateTimerText(time, setsRemaining)
-        } else {
-            restFragment.updateTimerText(time, setsRemaining)
+    fun updateTimer(time: String, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean) {
+        when {
+            isPrepare -> prepareFragment.updateTimerText(time)
+            isWork -> workFragment.updateTimerText(time, setsRemaining)
+            else -> restFragment.updateTimerText(time, setsRemaining)
         }
     }
 }

@@ -61,7 +61,7 @@ class TimerService : Service() {
         listener?.onPrepareStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate("Prepare time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, false)
+                listener?.onTimerUpdate("Prepare time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, false, true)
             }
 
             override fun onFinish() {
@@ -74,7 +74,7 @@ class TimerService : Service() {
         listener?.onWorkStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate("Work time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, true)
+                listener?.onTimerUpdate("Work time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, true, false)
             }
 
             override fun onFinish() {
@@ -88,7 +88,7 @@ class TimerService : Service() {
         listener?.onRestStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate("Rest time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, false)
+                listener?.onTimerUpdate("Rest time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, false,false)
             }
 
             override fun onFinish() {
@@ -103,7 +103,7 @@ class TimerService : Service() {
     }
 
     interface TimerListener {
-        fun onTimerUpdate(time: String, setsRemaining: Int, isWork: Boolean)
+        fun onTimerUpdate(time: String, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean)
         fun onWorkStart()
         fun onRestStart()
         fun onTrainingComplete(sets: Int, duration: Long)
