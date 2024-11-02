@@ -69,6 +69,12 @@ class MainActivity : AppCompatActivity(), Contract.View {
         // Not used in this context
     }
 
+    fun showPrepareFragment() {
+        val fragment = PrepareFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
     fun showWorkFragment() {
         showFragment(workFragment)
     }

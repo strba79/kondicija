@@ -26,7 +26,29 @@ class TimerService : Service() {
         val workTimeInMillis = (workMinutes * 60 + workSeconds) * 1000L
         val restTimeInMillis = restSeconds * 1000L
         totalDuration = 0
-        startWorkTimer(1, sets, workTimeInMillis, restTimeInMillis)
+        startPrepareTimer(1, sets, workTimeInMillis, restTimeInMillis)
+    }
+
+    private fun startPrepareTimer(
+        currentSet: Int,
+        sets: Int,
+        workTimeInMillis: Long,
+        restTimeInMillis: Long
+    ) {
+        listener?.onPrepareStart()
+        timer = object : CountDownTimer(3000, 1000) { // 3 seconds preparation time
+            override fun onTick(millisUntilFinished: Long) {
+                listener?.onTimerUpdate(
+                    "Prepare time remaining: ${millisUntilFinished / 1000} seconds",
+                    sets - currentSet + 1,
+                    false
+                )
+            }
+
+            override fun onFinish() {
+                startWorkTimer(currentSet, sets, workTimeInMillis, restTimeInMillis)
+            }
+        }.start()
     }
 
     private fun startWorkTimer(currentSet: Int, sets: Int, workTimeInMillis: Long, restTimeInMillis: Long) {
@@ -42,7 +64,7 @@ class TimerService : Service() {
             override fun onFinish() {
                 totalDuration += workTimeInMillis
                 listener?.onRestStart()
-                startRestTimer(restTimeInMillis, currentSet + 1, sets, workTimeInMillis)
+                startPrepareTimer(currentSet + 1, sets, workTimeInMillis, restTimeInMillis)
             }
         }.start()
     }
@@ -54,7 +76,7 @@ class TimerService : Service() {
             }
             override fun onFinish() {
                 totalDuration += restTimeInMillis
-                startWorkTimer(currentSet, sets, workTimeInMillis, restTimeInMillis)
+                startPrepareTimer(currentSet, sets, workTimeInMillis, restTimeInMillis)
             }
         }.start()
     }
@@ -68,5 +90,6 @@ class TimerService : Service() {
         fun onWorkStart()
         fun onRestStart()
         fun onTrainingComplete(sets: Int, duration: Long)
+        fun onPrepareStart()
     }
 }

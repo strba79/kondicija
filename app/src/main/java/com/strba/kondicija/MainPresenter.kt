@@ -27,6 +27,10 @@ class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerS
         timerService = null
     }
 
+    override fun onPrepareStart() {
+        view.showPrepareFragment()
+    }
+
     override fun onTimerUpdate(time: String, setsRemaining: Int, isWork: Boolean) {
         view.updateTimer(time, setsRemaining, isWork)
     }

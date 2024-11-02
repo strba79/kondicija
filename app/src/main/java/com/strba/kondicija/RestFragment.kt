@@ -22,7 +22,9 @@ class RestFragment : Fragment() {
     }
 
     fun updateTimerText(time: String, setsRemaining: Int) {
-        timerTextView.text = time
-        setsRemainingTextView.text = "Sets remaining: $setsRemaining"
+        if (::timerTextView.isInitialized && ::setsRemainingTextView.isInitialized) {
+            timerTextView.text = time
+            setsRemainingTextView.text = "Sets remaining: $setsRemaining"
+        }
     }
 }
