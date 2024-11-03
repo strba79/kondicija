@@ -1,6 +1,5 @@
 package com.strba.kondicija.view
 
-import com.strba.kondicija.presenter.MainPresenter
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -14,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.strba.kondicija.Contract
 import com.strba.kondicija.R
+import com.strba.kondicija.presenter.MainPresenter
 import com.strba.kondicija.service.TimerService
 import com.strba.kondicija.view.fragment.EndFragment
 import com.strba.kondicija.view.fragment.InputFragment
@@ -29,16 +29,20 @@ class MainActivity : AppCompatActivity(), Contract.View {
     private lateinit var restFragment: RestFragment
     private lateinit var endFragment: EndFragment
     private var timerService: TimerService? = null
+    private var isServiceBound = false
+
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as TimerService.TimerBinder
             timerService = binder.getService()
             (presenter as MainPresenter).bindService(timerService!!)
+            isServiceBound = true
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             (presenter as MainPresenter).unbindService()
             timerService = null
+            isServiceBound = false
         }
     }
 
@@ -46,11 +50,8 @@ class MainActivity : AppCompatActivity(), Contract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
-        toolbar.setTitleTextColor(resources.getColor(R.color.white))
-        setSupportActionBar(toolbar)
-
         presenter = MainPresenter(this)
+
         prepareFragment = PrepareFragment()
         inputFragment = InputFragment()
         inputFragment.setPresenter(presenter)
@@ -60,27 +61,27 @@ class MainActivity : AppCompatActivity(), Contract.View {
         endFragment.setPresenter(presenter)
 
         showFragment(inputFragment)
-    }
-
-    override fun onStart() {
-        super.onStart()
         Intent(this, TimerService::class.java).also { intent ->
+            startForegroundService(intent)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        unbindService(serviceConnection)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
+        if (isServiceBound) {
+            unbindService(serviceConnection)
+            isServiceBound = false
+        }
         stopService(Intent(this, TimerService::class.java))
     }
 
-    override fun showLogEntry(log: String) {
-        // Not used in this context
+    override fun onStop() {
+        super.onStop()
+        if (isServiceBound) {
+            unbindService(serviceConnection)
+            isServiceBound = false
+        }
     }
 
     fun showPrepareFragment() {
@@ -120,5 +121,8 @@ class MainActivity : AppCompatActivity(), Contract.View {
             isWork -> workFragment.updateTimerText(time, setsRemaining)
             else -> restFragment.updateTimerText(time, setsRemaining)
         }
+    }
+    override fun showLogEntry(log: String) {
+        TODO("Not yet implemented")
     }
 }
