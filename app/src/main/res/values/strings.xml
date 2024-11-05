@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Conditioning</string>
+    <string name="start">Start</string>
+    <string name="plus">+</string>
+    <string name="rest_time_seconds">Rest Time (seconds)</string>
+    <string name="minus">-</string>
+    <string name="work_seconds">Work Seconds</string>
+    <string name="work_minutes">Work Minutes</string>
+    <string name="number_of_sets">Number of Sets</string>
 </resources>

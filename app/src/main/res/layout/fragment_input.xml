@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10sp"
+        android:paddingTop="35sp"
         android:background="@android:color/white">
 
         <LinearLayout
@@ -17,26 +18,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <Button
                 android:id="@+id/sets_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="-"
+                android:text="@string/minus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/sets"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Number of Sets"
+                android:hint="@string/number_of_sets"
                 android:inputType="number" />
 
             <Button
@@ -44,10 +45,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="+"
+                android:text="@string/plus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,26 +56,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/sets_container"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/sets_container">
 
             <Button
                 android:id="@+id/work_minutes_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="-"
+                android:text="@string/minus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/work_minutes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Work Minutes"
+                android:hint="@string/work_minutes"
                 android:inputType="number" />
 
             <Button
@@ -82,10 +83,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="+"
+                android:text="@string/plus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -93,26 +94,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/work_minutes_container"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/work_minutes_container">
 
             <Button
                 android:id="@+id/work_seconds_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="-"
+                android:text="@string/minus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/work_seconds"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Work Seconds"
+                android:hint="@string/work_seconds"
                 android:inputType="number" />
 
             <Button
@@ -120,10 +121,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="+"
+                android:text="@string/plus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -131,26 +132,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/work_seconds_container"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/work_seconds_container">
 
             <Button
                 android:id="@+id/rest_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="-"
+                android:text="@string/minus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/rest"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Rest Time (seconds)"
+                android:hint="@string/rest_time_seconds"
                 android:inputType="number" />
 
             <Button
@@ -158,20 +159,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="+"
+                android:text="@string/plus"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Button
             android:id="@+id/start_button"
-            android:layout_width="wrap_content"
+            android:layout_marginTop="55dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start"
-            app:layout_constraintTop_toBottomOf="@id/rest_container"
+            android:text="@string/start"
+            android:background="@android:color/holo_green_light"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/rest_container" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
         presenter = MainPresenter(this)
 
+        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        toolbar.setTitleTextColor(resources.getColor(R.color.text_icons))
+        setSupportActionBar(toolbar)
+
         prepareFragment = PrepareFragment()
         inputFragment = InputFragment()
         inputFragment.setPresenter(presenter)
