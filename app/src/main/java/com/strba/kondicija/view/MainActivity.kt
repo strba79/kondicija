@@ -7,6 +7,8 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -56,6 +58,17 @@ class MainActivity : AppCompatActivity(), Contract.View {
         toolbar.setTitleTextColor(resources.getColor(R.color.text_icons))
         setSupportActionBar(toolbar)
 
+        val streakText: TextView = findViewById(R.id.streak_text)
+        val streak = getTrainingStreak()
+
+        if (streak >= 1) {
+            streakText.visibility = View.VISIBLE
+            streakText.text = "Days in streak: $streak"
+            streakText.setTextColor(resources.getColor(R.color.text_icons))
+        } else {
+            streakText.visibility = View.GONE
+        }
+
         prepareFragment = PrepareFragment()
         inputFragment = InputFragment()
         inputFragment.setPresenter(presenter)
@@ -69,6 +82,23 @@ class MainActivity : AppCompatActivity(), Contract.View {
             startForegroundService(intent)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
+    }
+
+    private fun getTrainingStreak(): Int {
+        val sharedPreferences = getSharedPreferences("training_prefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("training_streak", 0)
+    }
+
+    private fun updateTrainingStreak(newStreak: Int) {
+        val sharedPreferences = getSharedPreferences("training_prefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putInt("training_streak", newStreak)
+            apply()
+        }
+    }
+
+    private fun resetTrainingStreak() {
+        updateTrainingStreak(0)
     }
 
     override fun onDestroy() {
@@ -102,10 +132,18 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
     fun showEndFragment(sets: Int, duration: Long) {
         endFragment.displaySummary(sets, duration)
+        val streak = getTrainingStreak() + 1
+        updateTrainingStreak(streak)
+        val streakText: TextView = findViewById(R.id.streak_text)
+        streakText.text = "Days in streak: $streak"
         showFragment(endFragment)
     }
 
     fun showFragment(fragment: Fragment) {
+        if (isFinishing || isDestroyed) {
+            return
+        }
+
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
         if (fragment is InputFragment) {
             toolbar.visibility = View.VISIBLE

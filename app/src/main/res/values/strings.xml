@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Conditioning</string>
+    <string name="app_name">Forma</string>
     <string name="start">Start</string>
     <string name="plus">+</string>
     <string name="rest_time_seconds">Rest Time (seconds)</string>
