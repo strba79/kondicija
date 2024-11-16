@@ -1,6 +1,9 @@
 package com.strba.kondicija.presenter
 
+import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.strba.kondicija.Contract
+import com.strba.kondicija.R
 import com.strba.kondicija.service.TimerListener
 import com.strba.kondicija.view.fragment.InputFragment
 import com.strba.kondicija.view.MainActivity
@@ -12,6 +15,10 @@ class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerL
     private var prepareFragment: PrepareFragment? = null
 
     override fun startTraining(sets: Int, workMinutes: Int, workSeconds: Int, restSeconds: Int) {
+        if (sets<= 0 && workMinutes <= 0 && workSeconds <= 0) {
+            Snackbar.make(view.findViewById(android.R.id.content), view.getString(R.string.error_no_work_data), Snackbar.LENGTH_SHORT).show()
+            return
+        }
         timerService?.startTraining(sets, workMinutes, workSeconds, restSeconds)
     }
 
