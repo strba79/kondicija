@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation("com.squareup:android-times-square:1.6.5@aar")
     implementation("com.google.android.material:material:1.4.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

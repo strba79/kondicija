@@ -18,6 +18,7 @@ import com.strba.kondicija.Contract
 import com.strba.kondicija.R
 import com.strba.kondicija.presenter.MainPresenter
 import com.strba.kondicija.service.TimerService
+import com.strba.kondicija.view.fragment.CalendarFragment
 import com.strba.kondicija.view.fragment.EndFragment
 import com.strba.kondicija.view.fragment.InputFragment
 import com.strba.kondicija.view.fragment.PrepareFragment
@@ -82,8 +83,10 @@ class MainActivity : AppCompatActivity(), Contract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_calendar -> {
-                // Handle calendar icon click
-                // For example, start a new activity or show a dialog
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, CalendarFragment())
+                    .addToBackStack(null)
+                    .commit()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -158,6 +161,14 @@ class MainActivity : AppCompatActivity(), Contract.View {
         }
     }
 
+    override fun onBackPressed() {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.backStackEntryCount > 0) {
+            fragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
+    }
     override fun showLogEntry(log: String) {
         TODO("Not yet implemented")
     }
