@@ -24,8 +24,10 @@ import com.strba.kondicija.view.fragment.InputFragment
 import com.strba.kondicija.view.fragment.PrepareFragment
 import com.strba.kondicija.view.fragment.RestFragment
 import com.strba.kondicija.view.fragment.WorkFragment
+import java.util.Date
 
 class MainActivity : AppCompatActivity(), Contract.View {
+    private val trainingSessions = mutableListOf<Date>()
     private lateinit var presenter: Contract.Presenter
     private lateinit var inputFragment: InputFragment
     private lateinit var workFragment: WorkFragment
@@ -171,5 +173,13 @@ class MainActivity : AppCompatActivity(), Contract.View {
     }
     override fun showLogEntry(log: String) {
         TODO("Not yet implemented")
+    }
+
+    fun addTrainingSession(date: Date) {
+        trainingSessions.add(date)
+    }
+
+    fun getTrainingSessions(): List<Date> {
+        return trainingSessions
     }
 }

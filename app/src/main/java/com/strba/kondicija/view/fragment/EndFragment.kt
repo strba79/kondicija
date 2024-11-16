@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.strba.kondicija.Contract
 import com.strba.kondicija.R
+import com.strba.kondicija.view.MainActivity
+import java.util.Date
 
 class EndFragment : Fragment() {
     private lateinit var summaryTextView: TextView
@@ -28,6 +30,11 @@ class EndFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         summaryTextView = view.findViewById(R.id.summary_text_view)
         restartButton = view.findViewById(R.id.restart_button)
+        val addButton: Button = view.findViewById(R.id.add_to_calendar_button)
+        addButton.setOnClickListener {
+            val mainActivity = activity as MainActivity
+            mainActivity.addTrainingSession(Date())
+        }
 
         restartButton.setOnClickListener {
             presenter.restartTraining()

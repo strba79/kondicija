@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.timessquare.CalendarPickerView
 import com.strba.kondicija.R
+import com.strba.kondicija.view.MainActivity
 import java.util.*
 
 class CalendarFragment : Fragment() {
@@ -26,6 +27,10 @@ class CalendarFragment : Fragment() {
         val today = Date()
         calendarView.init(today, nextYear.time)
             .withSelectedDate(today)
+
+        val mainActivity = activity as MainActivity
+        val trainingSessions = mainActivity.getTrainingSessions()
+        calendarView.highlightDates(trainingSessions)
 
         closeButton.setOnClickListener {
             parentFragmentManager.popBackStack()
