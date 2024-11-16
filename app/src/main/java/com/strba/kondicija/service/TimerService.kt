@@ -80,8 +80,19 @@ class TimerService : Service() {
     private fun startNextStep() {
         if (currentStepIndex < trainingSequence.size) {
             val step = trainingSequence[currentStepIndex]
+            val nextStep = if (currentStepIndex + 1 < trainingSequence.size) {
+                trainingSequence[currentStepIndex + 1]
+            } else {
+                null
+            }
+            val nextState = when (nextStep?.type) {
+                StepType.WORK -> "next step: work"
+                StepType.REST -> "next step: rest"
+                else -> "End"
+            }
+
             when (step.type) {
-                StepType.PREPARE -> startPrepareTimer(step.duration)
+                StepType.PREPARE -> startPrepareTimer(step.duration, nextState)
                 StepType.WORK -> startWorkTimer(step.duration)
                 StepType.REST -> startRestTimer(step.duration)
                 StepType.END -> TODO()
@@ -93,11 +104,17 @@ class TimerService : Service() {
         }
     }
 
-    private fun startPrepareTimer(duration: Long) {
+    private fun startPrepareTimer(duration: Long, nextState: String) {
         listener?.onPrepareStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate("Prepare time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, false, true)
+                listener?.onTimerUpdate(
+                    (millisUntilFinished / 1000).toInt(),
+                    trainingSequence.size / 3 - currentStepIndex / 3,
+                    isWork = false,
+                    isPrepare = true,
+                    nextState = nextState
+                )
             }
 
             override fun onFinish() {
@@ -110,7 +127,10 @@ class TimerService : Service() {
         listener?.onWorkStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate("Work time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, true, false)
+                listener?.onTimerUpdate((millisUntilFinished / 1000).toInt(), trainingSequence.size / 3 - currentStepIndex / 3, true,
+                    isPrepare = false,
+                    nextState = "Rest" // or appropriate next state
+                )
             }
 
             override fun onFinish() {
@@ -124,7 +144,13 @@ class TimerService : Service() {
         listener?.onRestStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate("Rest time remaining: ${millisUntilFinished / 1000} seconds", trainingSequence.size / 3 - currentStepIndex / 3, false,false)
+                listener?.onTimerUpdate(
+                    (millisUntilFinished / 1000).toInt(),
+                    trainingSequence.size / 3 - currentStepIndex / 3,
+                    isWork = false,
+                    isPrepare = false,
+                    nextState = "Work" // or appropriate next state
+                )
             }
 
             override fun onFinish() {
@@ -140,7 +166,7 @@ class TimerService : Service() {
     }
 
     interface TimerListener {
-        fun onTimerUpdate(time: String, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean)
+        fun onTimerUpdate(time: Int, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean, nextState: String)
         fun onWorkStart()
         fun onRestStart()
         fun onTrainingComplete(sets: Int, duration: Long)

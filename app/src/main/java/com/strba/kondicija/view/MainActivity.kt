@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -135,7 +134,7 @@ class MainActivity : AppCompatActivity(), Contract.View {
         val streak = getTrainingStreak() + 1
         updateTrainingStreak(streak)
         val streakText: TextView = findViewById(R.id.streak_text)
-        streakText.text = "Days in streak: $streak"
+        streakText.text = "Training sessions done: $streak"
         showFragment(endFragment)
     }
 
@@ -157,13 +156,23 @@ class MainActivity : AppCompatActivity(), Contract.View {
         fragmentTransaction.commit()
     }
 
-    fun updateTimer(time: String, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean) {
+    fun updateTimer(
+        minutes: Int,
+        seconds: Int,
+        setsRemaining: Int,
+        isWork: Boolean,
+        isPrepare: Boolean,
+        nextState: String
+    ) {
+        val displayTime = String.format("%02d:%02d", minutes, seconds)
+
         when {
-            isPrepare -> prepareFragment.updateTimerText(time)
-            isWork -> workFragment.updateTimerText(time, setsRemaining)
-            else -> restFragment.updateTimerText(time, setsRemaining)
+            isPrepare -> prepareFragment.updateTimerText(displayTime, nextState)
+            isWork -> workFragment.updateTimerText(displayTime, setsRemaining)
+            else -> restFragment.updateTimerText(displayTime, setsRemaining)
         }
     }
+
     override fun showLogEntry(log: String) {
         TODO("Not yet implemented")
     }

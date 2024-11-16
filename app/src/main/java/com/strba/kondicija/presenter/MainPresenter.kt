@@ -6,9 +6,11 @@ import com.strba.kondicija.view.MainActivity
 import com.strba.kondicija.view.fragment.PrepareFragment
 import com.strba.kondicija.service.TimerService
 
-class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerService.TimerListener {
+class MainPresenter(private val view: MainActivity) : Contract.Presenter,
+    TimerService.TimerListener {
     private var timerService: TimerService? = null
     private var prepareFragment: PrepareFragment? = null
+
     override fun startTraining(sets: Int, workMinutes: Int, workSeconds: Int, restSeconds: Int) {
         timerService?.startTraining(sets, workMinutes, workSeconds, restSeconds)
     }
@@ -36,12 +38,15 @@ class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerS
     }
 
     override fun onTimerUpdate(
-        time: String,
+        time: Int,
         setsRemaining: Int,
         isWork: Boolean,
-        isPrepare: Boolean
+        isPrepare: Boolean,
+        nextState: String
     ) {
-        view.updateTimer(time, setsRemaining, isWork, isPrepare)
+        val minutes = time / 60
+        val seconds = time % 60
+        view.updateTimer(minutes, seconds, setsRemaining, isWork, isPrepare, nextState)
     }
 
     override fun onWorkStart() {

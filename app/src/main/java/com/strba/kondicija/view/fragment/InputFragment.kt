@@ -51,13 +51,13 @@ class InputFragment : Fragment() {
 
     private fun increaseValue(editText: EditText) {
         val value = editText.text.toString().toIntOrNull() ?: 0
-        editText.setText((value + 1).toString())
+        editText.setText(String.format("%02d", (value + 1).coerceAtMost(30)))
     }
 
     private fun decreaseValue(editText: EditText) {
         val value = editText.text.toString().toIntOrNull() ?: 0
         if (value > 0) {
-            editText.setText((value - 1).toString())
+            editText.setText(String.format("%02d", value - 1))
         }
     }
 
