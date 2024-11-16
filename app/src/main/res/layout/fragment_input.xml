@@ -13,6 +13,18 @@
         android:paddingTop="35sp"
         android:background="@android:color/white">
 
+        <TextView
+            android:id="@+id/sets_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sets"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <LinearLayout
             android:id="@+id/sets_container"
             android:layout_width="0dp"
@@ -20,7 +32,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/sets_title">
 
             <Button
                 android:id="@+id/sets_minus"
@@ -51,6 +63,18 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/work_minutes_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Work Minutes"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/sets_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <LinearLayout
             android:id="@+id/work_minutes_container"
             android:layout_width="0dp"
@@ -58,7 +82,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sets_container">
+            app:layout_constraintTop_toBottomOf="@id/work_minutes_title">
 
             <Button
                 android:id="@+id/work_minutes_minus"
@@ -89,6 +113,18 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/work_seconds_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Work Seconds"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/work_minutes_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <LinearLayout
             android:id="@+id/work_seconds_container"
             android:layout_width="0dp"
@@ -96,7 +132,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/work_minutes_container">
+            app:layout_constraintTop_toBottomOf="@id/work_seconds_title">
 
             <Button
                 android:id="@+id/work_seconds_minus"
@@ -127,6 +163,18 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/rest_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rest"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/work_seconds_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <LinearLayout
             android:id="@+id/rest_container"
             android:layout_width="0dp"
@@ -134,7 +182,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/work_seconds_container">
+            app:layout_constraintTop_toBottomOf="@id/rest_title">
 
             <Button
                 android:id="@+id/rest_minus"
