@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -57,17 +59,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
         toolbar.setTitleTextColor(resources.getColor(R.color.text_icons))
         setSupportActionBar(toolbar)
 
-        val streakText: TextView = findViewById(R.id.streak_text)
-        val streak = getTrainingStreak()
-
-        if (streak >= 1) {
-            streakText.visibility = View.VISIBLE
-            streakText.text = "Days in streak: $streak"
-            streakText.setTextColor(resources.getColor(R.color.text_icons))
-        } else {
-            streakText.visibility = View.GONE
-        }
-
         prepareFragment = PrepareFragment()
         inputFragment = InputFragment()
         inputFragment.setPresenter(presenter)
@@ -83,23 +74,21 @@ class MainActivity : AppCompatActivity(), Contract.View {
         }
     }
 
-    private fun getTrainingStreak(): Int {
-        val sharedPreferences = getSharedPreferences("training_prefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getInt("training_streak", 0)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
     }
 
-    private fun updateTrainingStreak(newStreak: Int) {
-        val sharedPreferences = getSharedPreferences("training_prefs", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putInt("training_streak", newStreak)
-            apply()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_calendar -> {
+                // Handle calendar icon click
+                // For example, start a new activity or show a dialog
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
-
-    private fun resetTrainingStreak() {
-        updateTrainingStreak(0)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         if (isServiceBound) {
@@ -131,10 +120,6 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
     fun showEndFragment(sets: Int, duration: Long) {
         endFragment.displaySummary(sets, duration)
-        val streak = getTrainingStreak() + 1
-        updateTrainingStreak(streak)
-        val streakText: TextView = findViewById(R.id.streak_text)
-        streakText.text = "Training sessions done: $streak"
         showFragment(endFragment)
     }
 

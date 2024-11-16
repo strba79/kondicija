@@ -16,17 +16,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
 
-        <TextView
-            android:id="@+id/streak_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Days in streak: 0"
-            android:layout_marginEnd="20sp"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            android:layout_gravity="end" />
-
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
