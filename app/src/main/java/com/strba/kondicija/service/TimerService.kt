@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
-import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
@@ -62,6 +61,11 @@ class TimerService : Service() {
 
     fun startTraining(sets: Int, workMinutes: Int, workSeconds: Int, restSeconds: Int) {
         val workTimeInMillis = (workMinutes * 60 + workSeconds) * 1000L
+        if (workTimeInMillis <= 0) {
+            listener?.onTrainingComplete(0, 0)
+            return
+        }
+
         val restTimeInMillis = restSeconds * 1000L
         val prepareTimeInMillis = 3000L // 3 seconds preparation time
 
@@ -70,7 +74,9 @@ class TimerService : Service() {
             trainingSequence.add(TrainingStep(StepType.PREPARE, prepareTimeInMillis))
             trainingSequence.add(TrainingStep(StepType.WORK, workTimeInMillis))
             trainingSequence.add(TrainingStep(StepType.PREPARE, prepareTimeInMillis))
-            trainingSequence.add(TrainingStep(StepType.REST, restTimeInMillis))
+            if (restTimeInMillis > 0) {
+                trainingSequence.add(TrainingStep(StepType.REST, restTimeInMillis))
+            }
         }
 
         currentStepIndex = 0
@@ -86,9 +92,9 @@ class TimerService : Service() {
                 null
             }
             val nextState = when (nextStep?.type) {
-                StepType.WORK -> "next step: work"
-                StepType.REST -> "next step: rest"
-                else -> "End"
+                StepType.WORK -> "next: Work"
+                StepType.REST -> "next: Rest"
+                else -> ""
             }
 
             when (step.type) {
@@ -105,6 +111,12 @@ class TimerService : Service() {
     }
 
     private fun startPrepareTimer(duration: Long, nextState: String) {
+        if (nextState.isEmpty()) {
+            currentStepIndex++
+            startNextStep()
+            return
+        }
+
         listener?.onPrepareStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -127,9 +139,12 @@ class TimerService : Service() {
         listener?.onWorkStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate((millisUntilFinished / 1000).toInt(), trainingSequence.size / 3 - currentStepIndex / 3, true,
+                listener?.onTimerUpdate(
+                    (millisUntilFinished / 1000).toInt(),
+                    trainingSequence.size / 3 - currentStepIndex / 3,
+                    isWork = true,
                     isPrepare = false,
-                    nextState = "Rest" // or appropriate next state
+                    nextState = if (currentStepIndex + 1 < trainingSequence.size && trainingSequence[currentStepIndex + 1].type == StepType.REST) "Rest" else ""
                 )
             }
 
@@ -149,7 +164,7 @@ class TimerService : Service() {
                     trainingSequence.size / 3 - currentStepIndex / 3,
                     isWork = false,
                     isPrepare = false,
-                    nextState = "Work" // or appropriate next state
+                    nextState = if (currentStepIndex + 1 < trainingSequence.size && trainingSequence[currentStepIndex + 1].type == StepType.WORK) "Work" else ""
                 )
             }
 
@@ -164,12 +179,12 @@ class TimerService : Service() {
         timer?.cancel()
         stopForeground(STOP_FOREGROUND_DETACH)
     }
+}
 
-    interface TimerListener {
-        fun onTimerUpdate(time: Int, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean, nextState: String)
-        fun onWorkStart()
-        fun onRestStart()
-        fun onTrainingComplete(sets: Int, duration: Long)
-        fun onPrepareStart()
-    }
+interface TimerListener {
+    fun onPrepareStart()
+    fun onWorkStart()
+    fun onRestStart()
+    fun onTimerUpdate(time: Int, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean, nextState: String)
+    fun onTrainingComplete(sets: Int, duration: Long)
 }

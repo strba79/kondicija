@@ -1,13 +1,13 @@
 package com.strba.kondicija.presenter
 
 import com.strba.kondicija.Contract
+import com.strba.kondicija.service.TimerListener
 import com.strba.kondicija.view.fragment.InputFragment
 import com.strba.kondicija.view.MainActivity
 import com.strba.kondicija.view.fragment.PrepareFragment
 import com.strba.kondicija.service.TimerService
 
-class MainPresenter(private val view: MainActivity) : Contract.Presenter,
-    TimerService.TimerListener {
+class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerListener {
     private var timerService: TimerService? = null
     private var prepareFragment: PrepareFragment? = null
 
