@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/holo_green_light">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textStyle="bold"
-            android:textSize="54sp" />
+            android:textSize="70sp" />
 
         <TextView
             android:id="@+id/sets_remaining_text_view"
@@ -36,6 +37,16 @@
             android:layout_marginBottom="16dp"
             android:textColor="#90FFFFFF"
             android:textStyle="bold"
-            android:textSize="44sp" />
+            android:textSize="54sp" />
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="12dp"
+        android:visibility="gone"
+        app:backgroundTint="#90FFFFFF"
+        android:src="@drawable/ic_timer" />
 </FrameLayout>
