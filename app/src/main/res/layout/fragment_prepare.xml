@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/light_primary"
     android:padding="16dp">
 
     <TextView
@@ -10,19 +11,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="PREPARE"
+        android:textColor="#90FFFFFF"
         android:textStyle="bold"
-        android:textSize="54sp" />
+        android:textSize="74sp" />
 
     <TextView
         android:id="@+id/timer_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="44sp" />
+        android:textStyle="bold"
+        android:textSize="54sp" />
 
     <TextView
         android:id="@+id/tvNextStep"
         android:layout_width="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#95FFFFFF"
         android:layout_height="wrap_content"
-        android:textSize="24sp" />
+        android:textSize="34sp" />
 
 </LinearLayout>

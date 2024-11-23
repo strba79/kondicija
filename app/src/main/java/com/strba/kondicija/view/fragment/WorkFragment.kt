@@ -24,6 +24,6 @@ class WorkFragment : Fragment() {
 
     fun updateTimerText(time: String, setsRemaining: Int) {
         timerTextView.text = time
-        setsRemainingTextView.text = "Working sets remaining: $setsRemaining"
+        setsRemainingTextView.text = "$setsRemaining"
     }
 }

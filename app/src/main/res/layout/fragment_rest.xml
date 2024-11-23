@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="REST"
-            android:textSize="54sp"
+            android:textColor="#90FFFFFF"
+            android:textSize="74sp"
             android:textStyle="bold" />
 
         <TextView
@@ -24,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="44sp" />
+            android:textStyle="bold"
+            android:textSize="54sp" />
 
         <TextView
             android:id="@+id/sets_remaining_text_view"
@@ -32,6 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="16dp"
-            android:textSize="18sp" />
+            android:textColor="#90FFFFFF"
+            android:textStyle="bold"
+            android:textSize="44sp" />
     </LinearLayout>
 </FrameLayout>
