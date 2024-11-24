@@ -15,7 +15,7 @@ class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerL
     private var prepareFragment: PrepareFragment? = null
 
     override fun startTraining(sets: Int, workMinutes: Int, workSeconds: Int, restSeconds: Int) {
-        if (sets<= 0 && workMinutes <= 0 && workSeconds <= 0) {
+        if (sets <= 0 && workMinutes <= 0 && workSeconds <= 0) {
             Snackbar.make(view.findViewById(android.R.id.content), view.getString(R.string.error_no_work_data), Snackbar.LENGTH_SHORT).show()
             return
         }
@@ -27,6 +27,14 @@ class MainPresenter(private val view: MainActivity) : Contract.Presenter, TimerL
         val inputFragment = InputFragment()
         inputFragment.setPresenter(this)
         view.showFragment(inputFragment)
+    }
+
+    override fun pauseTraining() {
+        timerService?.pauseTraining()
+    }
+
+    override fun resumeTraining() {
+        timerService?.resumeTraining()
     }
 
     fun bindService(service: TimerService) {

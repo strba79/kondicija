@@ -8,28 +8,35 @@ import android.content.Intent
 import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.strba.kondicija.R
 import com.strba.kondicija.StepType
 import com.strba.kondicija.TrainingStep
+import com.strba.kondicija.service.viewmodel.TimerViewModel
 
 class TimerService : Service() {
-    private val binder = TimerBinder()
+    private lateinit var viewModel: TimerViewModel
     private var timer: CountDownTimer? = null
-    private var totalDuration: Long = 0
     private var listener: TimerListener? = null
-    private val trainingSequence = mutableListOf<TrainingStep>()
-    private var currentStepIndex = 0
 
-    inner class TimerBinder : Binder() {
+    private val binder = LocalBinder()
+
+    inner class LocalBinder : Binder() {
         fun getService(): TimerService = this@TimerService
     }
 
-    override fun onBind(intent: Intent?): IBinder = binder
+    override fun onBind(intent: Intent?): IBinder {
+        return binder
+    }
 
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+    }
+
+    fun setViewModel(viewModel: TimerViewModel) {
+        this.viewModel = viewModel
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -69,25 +76,25 @@ class TimerService : Service() {
         val restTimeInMillis = restSeconds * 1000L
         val prepareTimeInMillis = 3000L // 3 seconds preparation time
 
-        trainingSequence.clear()
+        viewModel._trainingSequence.clear()
         for (i in 1..sets) {
-            trainingSequence.add(TrainingStep(StepType.PREPARE, prepareTimeInMillis))
-            trainingSequence.add(TrainingStep(StepType.WORK, workTimeInMillis))
-            trainingSequence.add(TrainingStep(StepType.PREPARE, prepareTimeInMillis))
+            viewModel._trainingSequence.add(TrainingStep(StepType.PREPARE, prepareTimeInMillis))
+            viewModel._trainingSequence.add(TrainingStep(StepType.WORK, workTimeInMillis))
+            viewModel._trainingSequence.add(TrainingStep(StepType.PREPARE, prepareTimeInMillis))
             if (restTimeInMillis > 0) {
-                trainingSequence.add(TrainingStep(StepType.REST, restTimeInMillis))
+                viewModel._trainingSequence.add(TrainingStep(StepType.REST, restTimeInMillis))
             }
         }
 
-        currentStepIndex = 0
+        viewModel._currentStepIndex = 0
         startNextStep()
     }
 
     private fun startNextStep() {
-        if (currentStepIndex < trainingSequence.size) {
-            val step = trainingSequence[currentStepIndex]
-            val nextStep = if (currentStepIndex + 1 < trainingSequence.size) {
-                trainingSequence[currentStepIndex + 1]
+        if (viewModel.currentStepIndex < viewModel.trainingSequence.size) {
+            val step = viewModel.trainingSequence[viewModel.currentStepIndex]
+            val nextStep = if (viewModel.currentStepIndex + 1 < viewModel.trainingSequence.size) {
+                viewModel.trainingSequence[viewModel.currentStepIndex + 1]
             } else {
                 null
             }
@@ -103,16 +110,20 @@ class TimerService : Service() {
                 StepType.REST -> startRestTimer(step.duration)
                 StepType.END -> TODO()
             }
-            currentStepIndex++
         } else {
-            listener?.onTrainingComplete(trainingSequence.size / 3, totalDuration)
+            listener?.onTrainingComplete(
+                viewModel.trainingSequence.size / 3,
+                viewModel.totalDuration
+            )
             stopForeground(STOP_FOREGROUND_DETACH)
         }
     }
 
     private fun startPrepareTimer(duration: Long, nextState: String) {
         if (nextState.isEmpty()) {
-            currentStepIndex++
+            if (!viewModel.isPaused) {
+                viewModel._currentStepIndex++
+            }
             startNextStep()
             return
         }
@@ -120,17 +131,26 @@ class TimerService : Service() {
         listener?.onPrepareStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate(
-                    (millisUntilFinished / 1000).toInt(),
-                    trainingSequence.size / 3 - currentStepIndex / 3,
-                    isWork = false,
-                    isPrepare = true,
-                    nextState = nextState
-                )
+                if (viewModel.isPaused) {
+                    viewModel._remainingTime = millisUntilFinished
+                    cancel()
+                } else {
+                    viewModel._remainingTime = millisUntilFinished
+                    listener?.onTimerUpdate(
+                        (millisUntilFinished / 1000).toInt(),
+                        viewModel.trainingSequence.size / 3 - viewModel.currentStepIndex / 3,
+                        isWork = false,
+                        isPrepare = true,
+                        nextState = nextState
+                    )
+                }
             }
 
             override fun onFinish() {
-                startNextStep()
+                if (!viewModel.isPaused) {
+                    viewModel._currentStepIndex++
+                    startNextStep()
+                }
             }
         }.start()
     }
@@ -139,18 +159,27 @@ class TimerService : Service() {
         listener?.onWorkStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate(
-                    (millisUntilFinished / 1000).toInt(),
-                    trainingSequence.size / 3 - currentStepIndex / 3,
-                    isWork = true,
-                    isPrepare = false,
-                    nextState = if (currentStepIndex + 1 < trainingSequence.size && trainingSequence[currentStepIndex + 1].type == StepType.REST) "Rest" else ""
-                )
+                if (viewModel.isPaused) {
+                    viewModel._remainingTime = millisUntilFinished
+                    cancel()
+                } else {
+                    viewModel._remainingTime = millisUntilFinished
+                    listener?.onTimerUpdate(
+                        (millisUntilFinished / 1000).toInt(),
+                        viewModel.trainingSequence.size / 3 - viewModel.currentStepIndex / 3,
+                        isWork = true,
+                        isPrepare = false,
+                        nextState = if (viewModel.currentStepIndex + 1 < viewModel.trainingSequence.size && viewModel.trainingSequence[viewModel.currentStepIndex + 1].type == StepType.REST) "Rest" else ""
+                    )
+                }
             }
 
             override fun onFinish() {
-                totalDuration += duration
-                startNextStep()
+                if (!viewModel.isPaused) {
+                    viewModel._totalDuration += duration
+                    viewModel._currentStepIndex++
+                    startNextStep()
+                }
             }
         }.start()
     }
@@ -159,25 +188,80 @@ class TimerService : Service() {
         listener?.onRestStart()
         timer = object : CountDownTimer(duration, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                listener?.onTimerUpdate(
-                    (millisUntilFinished / 1000).toInt(),
-                    trainingSequence.size / 3 - currentStepIndex / 3,
-                    isWork = false,
-                    isPrepare = false,
-                    nextState = if (currentStepIndex + 1 < trainingSequence.size && trainingSequence[currentStepIndex + 1].type == StepType.WORK) "Work" else ""
-                )
+                if (viewModel.isPaused) {
+                    viewModel._remainingTime = millisUntilFinished
+                    cancel()
+                } else {
+                    viewModel._remainingTime = millisUntilFinished
+                    listener?.onTimerUpdate(
+                        (millisUntilFinished / 1000).toInt(),
+                        viewModel.trainingSequence.size / 3 - viewModel.currentStepIndex / 3,
+                        isWork = false,
+                        isPrepare = false,
+                        nextState = if (viewModel.currentStepIndex + 1 < viewModel.trainingSequence.size && viewModel.trainingSequence[viewModel.currentStepIndex + 1].type == StepType.WORK) "Work" else ""
+                    )
+                }
             }
 
             override fun onFinish() {
-                totalDuration += duration
-                startNextStep()
+                if (!viewModel.isPaused) {
+                    viewModel._totalDuration += duration
+                    viewModel._currentStepIndex++
+                    startNextStep()
+                }
             }
         }.start()
+    }
+
+    fun pauseTraining() {
+        if (timer != null) {
+            timer?.cancel()
+            viewModel._isPaused = true
+        } else {
+            Log.w("TimerService", "Timer is already null")
+        }
+    }
+
+    fun resumeTraining() {
+        if (viewModel.isPaused) {
+            viewModel._isPaused = false
+            startTimer(viewModel.remainingTime)
+        }
+    }
+
+    private fun startTimer(duration: Long) {
+        if (viewModel.currentStepIndex < viewModel.trainingSequence.size) {
+            val step = viewModel.trainingSequence[viewModel.currentStepIndex]
+            when (step.type) {
+                StepType.PREPARE -> startPrepareTimer(duration, getNextState())
+                StepType.WORK -> startWorkTimer(duration)
+                StepType.REST -> startRestTimer(duration)
+                else -> throw IllegalStateException("Unknown step type")
+            }
+        } else {
+            Log.e(
+                "TimerService",
+                "Index out of bounds: ${viewModel.currentStepIndex}, Size: ${viewModel.trainingSequence.size}"
+            )
+        }
     }
 
     fun stopTraining() {
         timer?.cancel()
         stopForeground(STOP_FOREGROUND_DETACH)
+    }
+
+    private fun getNextState(): String {
+        val nextStep = if (viewModel.currentStepIndex + 1 < viewModel.trainingSequence.size) {
+            viewModel.trainingSequence[viewModel.currentStepIndex + 1]
+        } else {
+            null
+        }
+        return when (nextStep?.type) {
+            StepType.WORK -> "next: Work"
+            StepType.REST -> "next: Rest"
+            else -> ""
+        }
     }
 }
 
@@ -185,6 +269,13 @@ interface TimerListener {
     fun onPrepareStart()
     fun onWorkStart()
     fun onRestStart()
-    fun onTimerUpdate(time: Int, setsRemaining: Int, isWork: Boolean, isPrepare: Boolean, nextState: String)
+    fun onTimerUpdate(
+        time: Int,
+        setsRemaining: Int,
+        isWork: Boolean,
+        isPrepare: Boolean,
+        nextState: String
+    )
+
     fun onTrainingComplete(sets: Int, duration: Long)
 }

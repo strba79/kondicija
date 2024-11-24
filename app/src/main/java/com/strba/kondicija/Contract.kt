@@ -8,6 +8,8 @@ interface Contract {
     interface Presenter {
         fun startTraining(sets: Int, workMinutes: Int, workSeconds: Int, restSeconds: Int)
         fun restartTraining()
+        fun pauseTraining()
+        fun resumeTraining()
     }
 
     interface Model

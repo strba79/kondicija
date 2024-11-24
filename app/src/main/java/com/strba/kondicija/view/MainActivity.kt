@@ -9,15 +9,16 @@ import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import com.strba.kondicija.Contract
 import com.strba.kondicija.R
 import com.strba.kondicija.presenter.MainPresenter
 import com.strba.kondicija.service.TimerService
+import com.strba.kondicija.service.viewmodel.TimerViewModel
 import com.strba.kondicija.view.fragment.CalendarFragment
 import com.strba.kondicija.view.fragment.EndFragment
 import com.strba.kondicija.view.fragment.InputFragment
@@ -27,6 +28,7 @@ import com.strba.kondicija.view.fragment.WorkFragment
 import java.util.Date
 
 class MainActivity : AppCompatActivity(), Contract.View {
+    private lateinit var timerViewModel: TimerViewModel
     private val trainingSessions = mutableListOf<Date>()
     private lateinit var presenter: Contract.Presenter
     private lateinit var inputFragment: InputFragment
@@ -39,9 +41,10 @@ class MainActivity : AppCompatActivity(), Contract.View {
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as TimerService.TimerBinder
+            val binder = service as TimerService.LocalBinder
             timerService = binder.getService()
             (presenter as MainPresenter).bindService(timerService!!)
+            timerService?.setViewModel(timerViewModel)
             isServiceBound = true
         }
 
@@ -71,6 +74,9 @@ class MainActivity : AppCompatActivity(), Contract.View {
         endFragment.setPresenter(presenter)
 
         showFragment(inputFragment)
+
+        timerViewModel = ViewModelProvider(this)[TimerViewModel::class.java]
+
         Intent(this, TimerService::class.java).also { intent ->
             startForegroundService(intent)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
