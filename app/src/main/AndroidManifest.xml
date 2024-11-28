@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Conditioning"
         tools:targetApi="31">
-
+        <receiver android:name=".service.TimerActionReceiver" />
         <activity
             android:name=".view.MainActivity"
             android:exported="true">

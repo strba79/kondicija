@@ -3,6 +3,7 @@ package com.strba.kondicija.service
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
@@ -40,7 +41,18 @@ class TimerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(1, getNotification())
+        startForeground(1, getNotification()) // Ensure this is called immediately
+
+        val action = intent?.getStringExtra(TimerActionReceiver.EXTRA_ACTION)
+        if (!::viewModel.isInitialized) {
+            Log.e("TimerService", "viewModel is not initialized")
+            stopSelf()
+            return START_NOT_STICKY
+        }
+        when (action) {
+            TimerActionReceiver.ACTION_PAUSE -> pauseTraining()
+            TimerActionReceiver.ACTION_RESUME -> resumeTraining()
+        }
         return START_STICKY
     }
 
@@ -55,10 +67,22 @@ class TimerService : Service() {
     }
 
     private fun getNotification(): Notification {
+        val pauseIntent = Intent(this, TimerActionReceiver::class.java).apply {
+            action = TimerActionReceiver.ACTION_PAUSE
+        }
+        val pausePendingIntent = PendingIntent.getBroadcast(this, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val resumeIntent = Intent(this, TimerActionReceiver::class.java).apply {
+            action = TimerActionReceiver.ACTION_RESUME
+        }
+        val resumePendingIntent = PendingIntent.getBroadcast(this, 0, resumeIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         return NotificationCompat.Builder(this, "TimerServiceChannel")
             .setContentTitle("Training Timer")
             .setContentText("Training in progress")
             .setSmallIcon(R.drawable.ic_timer)
+            .addAction(R.drawable.ic_timer, "Pause", pausePendingIntent)
+            .addAction(R.drawable.ic_timer, "Resume", resumePendingIntent)
             .build()
     }
 
@@ -223,6 +247,10 @@ class TimerService : Service() {
     }
 
     fun resumeTraining() {
+        if (!::viewModel.isInitialized) {
+            Log.e("TimerService", "viewModel is not initialized")
+            return
+        }
         if (viewModel.isPaused) {
             viewModel._isPaused = false
             startTimer(viewModel.remainingTime)

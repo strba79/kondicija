@@ -147,9 +147,9 @@ class MainActivity : AppCompatActivity(), Contract.View {
         }
 
         val fragmentManager: FragmentManager = supportFragmentManager
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, fragment)
-        fragmentTransaction.commit()
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.commitAllowingStateLoss()
     }
 
     fun updateTimer(
